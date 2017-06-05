@@ -1,0 +1,13 @@
+{
+    "name": "vendor/test",
+    "description": "testowy",
+    "authors": [
+        {
+            "name": "Pawel Lukowski",
+            "email": "pawel.lukowski@wp.pl"
+        }
+    ],
+    "require": {
+        "swiftmailer/swiftmailer": "@stable"
+	 }
+}

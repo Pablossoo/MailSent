@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="jquery-ui-1.12.1.custom/jquery-ui.min.css">
+</head>
+<body>
+
+<div class="mycontent"></div>
+
+<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+    Formularz
+</button>
+
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Informacje</h4>
+            </div>
+            <div class="modal-body">
+                <div id="al">
+
+                </div>
+
+
+                <form id="theForm" data-toggle="validator" role="form">
+                    <div class="form-group">
+                        <label for="name">Imie</label>
+                        <input type="text" class="form-control" name="name" id="name" placeholder="Imię" required>
+                        <div class="help-block with-errors"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="surname">Nazwisko</label>
+                        <input type="text" class="form-control" id="surname" placeholder="Nazwisko" required>
+                        <div class="help-block with-errors"></div>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="NumberOfPeople">Ilosc osób</label>
+                        <input type="number" min="1" class="form-control" name="numberPople" id="NumberOfPeople"
+                               placeholder="Ilość osób" required>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Telefon</label>
+                        <input type="text" class="form-control" id="phone" name="phone" placeholder="telefon"
+                               pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}" title="Numer telefonu" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="datepicker">Data Poczatek</label>
+                        <input type="text" name="dateStart" id="datepicker" required>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="datepicker1">Data Koniec</label>
+                        <input type="text" name="dateEnd" id="datepicker1" required>
+
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+<script src="bower_components/bootstrap-validator/js/validator.js"></script>
+
+
+<script>
+
+    $.get( "http://localhost/Test_Symfony/web/app_dev.php/posts",{'id':35}, function( data ) {
+        $( ".mycontent" ).html( data );
+    });
+        $("#datepicker").datepicker({
+            onSelect: function (selected) {
+                var dtMax = new Date(selected);
+                dtMax.setDate(dtMax.getDate()+1);
+                var dd = dtMax.getDate();
+                var mm = dtMax.getMonth() + 1;
+                var y = dtMax.getFullYear();
+                var dtFormatted = mm + '/'+ dd + '/'+ y;
+                $("#datepicker1").datepicker("option", "minDate", dtFormatted, "dateFormat", "yy-mm-dd");
+            }
+        });
+
+        $("#datepicker1").datepicker({
+            onSelect: function (selected) {
+                var dtMax = new Date(selected);
+                dtMax.setDate(dtMax.getDate() - 1);
+                var dd = dtMax.getDate();
+                var mm = dtMax.getMonth() + 1;
+                var y = dtMax.getFullYear();
+                var dtFormatted = mm + '/'+ dd + '/'+ y;
+                $("#datepicker").datepicker("option", "maxDate", dtFormatted, "dateFormat", "yy-mm-dd" )
+            }
+        });
+
+        $('#theForm').validator().on('submit', function (e) {
+            if (e.isDefaultPrevented()) {
+                    console.log("blad");
+            } else {
+                e.preventDefault();
+                var url = "sentEmail.php";
+
+                $.getJSON({
+                    type: "POST",
+                    url: url,
+                    data: $("#theForm").serialize(),
+                    success: function (data) {
+                        var alertBox = '<div class="alert alert-' + data.messageType + ' alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' + data.message + '</div>';
+                        $('#al').html(alertBox);
+                    },
+                    error:function (data) {
+                        var alertBox = '<div class="alert alert-' + data.messageType + ' alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Blad</div>';
+                        $('#al').html(alertBox);
+                    }
+                });
+
+                e.preventDefault();
+            }
+        });
+
+
+</script>
+</body>
+</html>
