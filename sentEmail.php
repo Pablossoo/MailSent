@@ -27,8 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         try{
             $transport = Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, 'ssl')
-                ->setUsername('kerrallla1@gmail.com') //twoj email do konta gmail
-                ->setPassword('kolowrot313122@'); //haslo do konta gmail
+                ->setUsername('****') //twoj email do konta gmail
+                ->setPassword('****'); //haslo do konta gmail
             $mailer = Swift_Mailer::newInstance($transport);
 
             $message = Swift_Message::newInstance('Tytuł')
